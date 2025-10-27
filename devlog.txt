@@ -1,5 +1,11 @@
-INITIAL DD REVIEW
+andrewT -- 2025/10/22 23:00 INITIAL DD REVIEW
 Feedback: 
 Missing assigned members for tasks
 Unclear sitemap traversal
 Will Correct
+
+
+andrewT -- 2025/10/26 22:00 UPDATES TO DESIGN DOCUMENT 
+- Revamped Site infrastructure to reflect newly designated pivot
+- Added Database organization, sitemap, task assignments
+- Updated Components list
