@@ -9,3 +9,8 @@ andrewT -- 2025/10/26 22:00 UPDATES TO DESIGN DOCUMENT
 - Revamped Site infrastructure to reflect newly designated pivot
 - Added Database organization, sitemap, task assignments
 - Updated Components list
+
+andrewT -- 2025/10/27 17:40 CREATION OF BLOG SYSTEM
+-Added blog.py helper function file for main flask apps
+	- Includes data storage system w/ create blog, load blog, edit blog w/ inputs as discussed
+
