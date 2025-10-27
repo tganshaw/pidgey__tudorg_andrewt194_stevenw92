@@ -14,3 +14,8 @@ andrewT -- 2025/10/27 17:40 CREATION OF BLOG SYSTEM
 -Added blog.py helper function file for main flask apps
 	- Includes data storage system w/ create blog, load blog, edit blog w/ inputs as discussed
 
+andrewT -- 2025/10/27 18:00 DESIGN DOCUMENT EDITS
+-Edited Design document
+	-Fixed formatting of heading by removing unnecessary characters
+	-Added register button to login page
+	-Updated formatting of databases to reflect new standards
