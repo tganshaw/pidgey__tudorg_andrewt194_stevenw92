@@ -25,13 +25,14 @@ def register():
     USER_DB = sqlite3.connect(DB_NAME)
     USER_DB_CURSOR = USER_DB.cursor()
 
-    USER_DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS userdata(username TEXT, password TEXT);")
+    USER_DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS userdata(username TEXT, password TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT);")
 
-    INSERT_STRING = f"INSERT INTO userdata VALUES(\"{request.form['username']}\",\"{request.form['password']}\");"
+    INSERT_STRING = f"INSERT INTO userdata VALUES(\"{request.form['username']}\",\"{request.form['password']}\", NULL);"
     USER_DB_CURSOR.execute(INSERT_STRING)
     print(request.form['username'] + ", " + request.form['password'] + ", " + INSERT_STRING)
     session['username'] = request.form['username']
 
+    USER_DB.commit()
     USER_DB.close()
     return redirect("/")
 
@@ -46,12 +47,11 @@ def displaydb():
     TEST_DB_CURSOR = TEST_DB.cursor()
     TEST_DB_CURSOR.execute("SELECT * FROM userdata")
     rows = TEST_DB_CURSOR.fetchall()
-    rowString = ""
     for row in rows:
-        rowString = rowString + row + "\n"
+        print(row)
 
     TEST_DB.close()
-    return rowString
+    return "rows printed in terminal"
 
 app.debug = True
 app.run()
