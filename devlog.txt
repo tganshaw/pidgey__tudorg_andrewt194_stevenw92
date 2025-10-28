@@ -19,3 +19,10 @@ andrewT -- 2025/10/27 18:00 DESIGN DOCUMENT EDITS
 	-Fixed formatting of heading by removing unnecessary characters
 	-Added register button to login page
 	-Updated formatting of databases to reflect new standards
+
+tudorG -- 2025/10/27 20:00 ADDING REGISTRATION AND USER TABLE
+-Added a registration system
+	-Allowed users to sign up and log out
+	-User data gets added into userdata
+	-Currently no check for duplicate usernames, no password hashing system
+	-Also no way to log in once account is made
