@@ -1,9 +1,12 @@
 <html>
-
+<div class="navbar">
+  <a href = "/" > Go To Homepage </a>
+</div class="navbar">
   <h1> You are logged in. </h1>
   {{username}}
   {{password}}
 
   <a href="/logout"> Log Out </a>
-
+  <form action ="/search" method = "POST">
+    Search for users: <input type="TEXT" name="searchQuery">
 </html>
