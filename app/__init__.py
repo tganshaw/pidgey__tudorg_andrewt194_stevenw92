@@ -15,7 +15,14 @@ app.secret_key = "ttestingtestingnotfinalresult"
 def homepage():
     if 'username' not in session:
         return render_template("register.html")
-    return render_template("userprofile.html", username = session['username'])
+    USER_DB = sqlite3.connect(DB_NAME)
+    USER_DB_CURSOR = USER_DB.cursor()
+
+    USER_DB_CURSOR.execute(f"SELECT id FROM userdata WHERE username = \"{session['username']}\";")
+    userId = USER_DB_CURSOR.fetchone()[0];
+    USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM blogdata WHERE user = {userId};")
+    numBlogs = USER_DB_CURSOR.fetchone()[0];
+    return render_template("userprofile.html", username = session['username'], numblogs = numBlogs)
 
 @app.route("/register.html")
 def registerhtml():

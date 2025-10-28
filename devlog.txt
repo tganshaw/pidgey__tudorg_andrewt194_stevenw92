@@ -1,11 +1,11 @@
 andrewT -- 2025/10/22 23:00 INITIAL DD REVIEW
-Feedback: 
+Feedback:
 Missing assigned members for tasks
 Unclear sitemap traversal
 Will Correct
 
 
-andrewT -- 2025/10/26 22:00 UPDATES TO DESIGN DOCUMENT 
+andrewT -- 2025/10/26 22:00 UPDATES TO DESIGN DOCUMENT
 - Revamped Site infrastructure to reflect newly designated pivot
 - Added Database organization, sitemap, task assignments
 - Updated Components list
@@ -26,3 +26,11 @@ tudorG -- 2025/10/27 20:00 ADDING REGISTRATION AND USER TABLE
 	-User data gets added into userdata
 	-Currently no check for duplicate usernames, no password hashing system
 	-Also no way to log in once account is made
+
+tudorG -- 2025/10/28 10:00 ADDING LOGIN SYSTEM
+-Added a way for registered users to log in
+-Created a way to check for correct password
+-Created a way to check if username already existed when registering
+tudorG -- 2025/10/28 18:00 FIXING BUGS AND IMPROVING USERPROFILE.HTML
+-Fixed SQL bugs in blog.py
+-Updated the user profile page to include number of blogs
