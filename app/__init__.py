@@ -5,7 +5,7 @@ from flask import session
 from flask import redirect
 import sqlite3
 
-DB_NAME = "app/Data/database.db"
+DB_NAME = "Data/database.db"
 
 app = Flask(__name__)
 
