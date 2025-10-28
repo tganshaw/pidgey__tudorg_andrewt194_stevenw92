@@ -15,7 +15,7 @@ app.secret_key = "ttestingtestingnotfinalresult"
 def homepage():
     if 'username' not in session:
         return render_template("register.html")
-    return render_template("homepage.html",username = session['username'])
+    return render_template("userprofile.html", username = session['username'])
 
 @app.route("/register.html")
 def registerhtml():
