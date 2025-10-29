@@ -4,8 +4,9 @@ from flask import request
 from flask import session
 from flask import redirect
 import sqlite3
+import blog
 
-DB_NAME = "app/Data/database.db"
+DB_NAME = "Data/database.db"
 
 app = Flask(__name__)
 
@@ -19,10 +20,17 @@ def homepage():
     USER_DB_CURSOR = USER_DB.cursor()
 
     USER_DB_CURSOR.execute(f"SELECT id FROM userdata WHERE username = \"{session['username']}\";")
-    userId = USER_DB_CURSOR.fetchone()[0];
+    userId = USER_DB_CURSOR.fetchone()[0]
+    session['userId'] = userId
     USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM blogdata WHERE user = {userId};")
-    numBlogs = USER_DB_CURSOR.fetchone()[0];
-    return render_template("userprofile.html", username = session['username'], numblogs = numBlogs)
+    numBlogs = USER_DB_CURSOR.fetchone()[0]
+    print(blog.get_blogs(userId))
+    arr = []
+    for i in blog.get_blogs(userId):
+        print(i)
+        print(i[1])
+        arr+=blog.load_blog(i[1])
+    return render_template("userprofile.html", username = session['username'], numblogs = numBlogs, blogs = blog.get_blogs(userId), txt = arr)
 
 @app.route("/register.html")
 def registerhtml():
@@ -86,6 +94,24 @@ def login():
 @app.route("/logout")
 def logout():
     session.pop("username", None)
+    return redirect("/")
+
+#temp page for creating blogs for testing
+@app.route("/edit", methods = ["POST", "GET"])
+def edit():
+    if not 'username' in session:
+        return redirect("/")
+    return render_template("edit.html")
+
+#temp page for adding blogs to db
+@app.route("/add", methods = ["POST", "GET"])
+def add():
+    if not 'username' in session:
+        return redirect("/")
+    print("adding!")
+    print(request.args['title'], session['userId'])
+    blog.create_blog(request.args['title'], session['userId'])
+    blog.create_entry(blog.get_blog_id(request.args['title'], session['userId']), request.args['body'])
     return redirect("/")
 
 @app.route("/displaydb") # testing only

@@ -1,0 +1,3 @@
+Pip installs required: 
+flask
+sqlite3

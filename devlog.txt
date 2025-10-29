@@ -34,3 +34,13 @@ tudorG -- 2025/10/28 10:00 ADDING LOGIN SYSTEM
 tudorG -- 2025/10/28 18:00 FIXING BUGS AND IMPROVING USERPROFILE.HTML
 -Fixed SQL bugs in blog.py
 -Updated the user profile page to include number of blogs
+
+andrewT -- 2025/10/28 22:30 UPDATES TO BLOG SYSTEM
+-Added new pages to allow for users to edit and create blogs
+-Added blog data onto homepage to allow for viewing
+-Bug discovered: When DB is empty, website crashes b/c of userId
+-Added userId to session for checking across different functions
+
+andrewT -- 2025/10/28 22:45 OVERVIEW OF DELIVERABLES
+-updated readme to meet deadlines
+-added packages to requirements
