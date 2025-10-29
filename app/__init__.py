@@ -6,7 +6,16 @@ from flask import redirect
 import sqlite3
 import blog
 
+
 DB_NAME = "Data/database.db"
+DB = sqlite3.connect(DB_NAME)
+DB_CURSOR = DB.cursor()
+
+DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS userdata(username TEXT, password TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT);")
+DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS blogdata(blog_name TEXT, blog_id INTEGER PRIMARY KEY AUTOINCREMENT, user INT, entries INT);")
+DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS entrydata(blog_id INT, text TEXT, entry_id INT);")
+
+
 
 app = Flask(__name__)
 
@@ -51,8 +60,6 @@ def register():
 
     USER_DB = sqlite3.connect(DB_NAME)
     USER_DB_CURSOR = USER_DB.cursor()
-
-    USER_DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS userdata(username TEXT, password TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT);")
 
     USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM userdata WHERE username = '{request.form['username']}';")
     alreadyExists = USER_DB_CURSOR.fetchone()[0]
