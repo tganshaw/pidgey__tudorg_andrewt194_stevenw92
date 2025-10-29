@@ -44,3 +44,7 @@ andrewT -- 2025/10/28 22:30 UPDATES TO BLOG SYSTEM
 andrewT -- 2025/10/28 22:45 OVERVIEW OF DELIVERABLES
 -updated readme to meet deadlines
 -added packages to requirements
+
+andrewT -- 2025/10/29 11:00 UPDATES TO BLOG PAGE AND TEMPLATE RENDERING
+-Reformatted code in order display links to dedicated blog pages
+-Created page to display blogs for specific users
