@@ -11,9 +11,6 @@ DB_NAME = "Data/database.db"
 DB = sqlite3.connect(DB_NAME)
 DB_CURSOR = DB.cursor()
 
-DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS userdata(username TEXT, password TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT);")
-DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS blogdata(blog_name TEXT, blog_id INTEGER PRIMARY KEY AUTOINCREMENT, user INT, entries INT);")
-DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS entrydata(blog_id INT, text TEXT, entry_id INT);")
 
 
 
@@ -34,12 +31,16 @@ def homepage():
     USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM blogdata WHERE user = {userId};")
     numBlogs = USER_DB_CURSOR.fetchone()[0]
     print(blog.get_blogs(userId))
-    arr = []
+    arr = ""
     for i in blog.get_blogs(userId):
         print(i)
         print(i[1])
-        arr+=blog.load_blog(i[1])
+        arr += f'<a href = /blog?blog_id={i[1]}>{i[0]}</a><br>'
     return render_template("userprofile.html", username = session['username'], numblogs = numBlogs, blogs = blog.get_blogs(userId), txt = arr)
+
+@app.route("/blog", methods = ["POST", "GET"])
+def blogpage():
+    return render_template("blog.html", txt = blog.load_blog(request.args["blog_id"]))
 
 @app.route("/register.html")
 def registerhtml():
