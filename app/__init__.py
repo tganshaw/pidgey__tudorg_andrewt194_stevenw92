@@ -11,6 +11,9 @@ DB_NAME = "Data/database.db"
 DB = sqlite3.connect(DB_NAME)
 DB_CURSOR = DB.cursor()
 
+DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS userdata(username TEXT, password TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT);")
+DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS blogdata(blog_name TEXT, blog_id INTEGER PRIMARY KEY AUTOINCREMENT, user INT, entries INT);")
+DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS entrydata(blog_id INT, text TEXT, entry_id INT);")
 
 
 
