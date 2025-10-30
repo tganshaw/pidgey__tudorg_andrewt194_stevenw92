@@ -22,7 +22,7 @@ app.secret_key = "ttestingtestingnotfinalresult"
 @app.route("/")
 def homepage():
     if 'username' not in session:
-        return render_template("register.html")
+        return render_template("login.html")
     USER_DB = sqlite3.connect(DB_NAME)
     USER_DB_CURSOR = USER_DB.cursor()
 
@@ -36,7 +36,8 @@ def homepage():
     for i in blog.get_blogs(userId):
         print(i)
         print(i[1])
-        arr += f'<a href = /blog?blog_id={i[1]}&title={i[0]}>{i[0]}</a><br>'
+        blogTitle = i[0]
+        arr += f'<a href = /blog?blog_id={i[1]}&title={blogTitle}>{i[0]}</a><br>'
     return render_template("userprofile.html", username = session['username'], numblogs = numBlogs, blogs = blog.get_blogs(userId), txt = arr)
 
 @app.route("/blog", methods = ["POST", "GET"])
@@ -46,7 +47,7 @@ def blogpage():
     for i in x:
         str+=i[0]
         str+="<br><br>"
-    return render_template("blog.html", txt = str, title = request.args["title"])
+    return render_template("blog.html", txt = str, title = request.args["title"],blogid = request.args["blog_id"])
 
 @app.route("/register.html")
 def registerhtml():
@@ -115,7 +116,7 @@ def logout():
 def edit():
     if not 'username' in session:
         return redirect("/")
-    return render_template("edit.html", editing = request.args['editing'], title = request.args['title'])
+    return render_template("edit.html", editing = request.args['editing'], title = request.args['title'], blogid =request.args['blogid'])
 
 #temp page for adding blogs to db
 @app.route("/add", methods = ["POST", "GET"])
@@ -123,7 +124,7 @@ def add():
     if not 'username' in session:
         return redirect("/")
     blog.create_blog(request.args['title'], session['userId'])
-    blog.create_entry(blog.get_blog_id(request.args['title'], session['userId']), request.args['body'])
+    blog.create_entry(request.args['blogid'], request.args['body'])
     return redirect("/")
 
 @app.route("/displaydb") # testing only

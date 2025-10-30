@@ -1,21 +1,21 @@
 <html>
 <br>
-<a href="/"> Home </a>
-<a href="/logout"> Log Out </a>
+<a href="/"> Home </a><br>
+
 <form action ="/add">
     {% if editing == "false" %}
       <input type="text" name = "title" value = "Blog Title">
     {% else %}
       {{title}}
       <input type="hidden" name="title" value={{title}}>
+      <input type="hidden" name="blogid" value={{blogid}}>
     {% endif %}
     <br>
-    <textarea name = "body" rows = "30" cols = "30">
-      body
+    <textarea name = "body" rows = "10" cols = "60">body
     </textarea>
     <br>
     <input type = "submit" name = "sub1">
 </form>
 
-
+<a href="/logout"> Log Out </a>
 </html>
