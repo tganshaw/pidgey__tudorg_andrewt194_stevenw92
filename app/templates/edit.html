@@ -1,13 +1,14 @@
 <html>
-
-<h1> {{username}} </h1>
 <br>
-<h3> Blog Count : {{numblogs}} </h3>
-<br>
-Blogs: {{blogs}}
+<a href="/"> Home </a>
 <a href="/logout"> Log Out </a>
 <form action ="/add">
-    <input type="text" name = "title" value = "title">
+    {% if editing == "false" %}
+      <input type="text" name = "title" value = "Blog Title">
+    {% else %}
+      {{title}}
+      <input type="hidden" name="title" value={{title}}>
+    {% endif %}
     <br>
     <input type ="text" name = "body" value = "body">
     <br>

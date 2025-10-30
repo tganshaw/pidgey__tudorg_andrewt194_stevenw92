@@ -15,8 +15,6 @@ DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS userdata(username TEXT, password T
 DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS blogdata(blog_name TEXT, blog_id INTEGER PRIMARY KEY AUTOINCREMENT, user INT, entries INT);")
 DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS entrydata(blog_id INT, text TEXT, entry_id INT);")
 
-
-
 app = Flask(__name__)
 
 app.secret_key = "ttestingtestingnotfinalresult"
@@ -38,12 +36,17 @@ def homepage():
     for i in blog.get_blogs(userId):
         print(i)
         print(i[1])
-        arr += f'<a href = /blog?blog_id={i[1]}>{i[0]}</a><br>'
+        arr += f'<a href = /blog?blog_id={i[1]}&title={i[0]}>{i[0]}</a><br>'
     return render_template("userprofile.html", username = session['username'], numblogs = numBlogs, blogs = blog.get_blogs(userId), txt = arr)
 
 @app.route("/blog", methods = ["POST", "GET"])
 def blogpage():
-    return render_template("blog.html", txt = blog.load_blog(request.args["blog_id"]))
+    x = blog.load_blog(request.args["blog_id"])
+    str = ""
+    for i in x:
+        str+=i[0]
+        str+="<br><br>"
+    return render_template("blog.html", txt = str, title = request.args["title"])
 
 @app.route("/register.html")
 def registerhtml():
@@ -112,15 +115,13 @@ def logout():
 def edit():
     if not 'username' in session:
         return redirect("/")
-    return render_template("edit.html")
+    return render_template("edit.html", editing = request.args['editing'], title = request.args['title'])
 
 #temp page for adding blogs to db
 @app.route("/add", methods = ["POST", "GET"])
 def add():
     if not 'username' in session:
         return redirect("/")
-    print("adding!")
-    print(request.args['title'], session['userId'])
     blog.create_blog(request.args['title'], session['userId'])
     blog.create_entry(blog.get_blog_id(request.args['title'], session['userId']), request.args['body'])
     return redirect("/")

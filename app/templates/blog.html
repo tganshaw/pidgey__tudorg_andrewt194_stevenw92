@@ -1,7 +1,7 @@
 <html>
 <a href="/"> Home </a>
 <br>
-{{txt}}
+{{txt | safe}}
 <br>
-<a href="/edit"> Create Blog </a>
+<a href={{"/edit?editing=true&title=" ~ title}}> Create Entry </a>
 </html>
