@@ -47,7 +47,9 @@ def blogpage():
     for i in x:
         str+=i[0]
         str+="<br><br>"
-    return render_template("blog.html", txt = str, title = request.args["title"],blogid = request.args["blog_id"])
+    if("blog_id" in request.args):
+        return render_template("blog.html", txt = str, title = request.args["title"], blogid = request.args["blog_id"])
+    return render_template("blog.html", txt = str, title = request.args["title"])
 
 @app.route("/register.html")
 def registerhtml():
@@ -116,7 +118,9 @@ def logout():
 def edit():
     if not 'username' in session:
         return redirect("/")
-    return render_template("edit.html", editing = request.args['editing'], title = request.args['title'], blogid =request.args['blogid'])
+    if("blog_id" in request.args):
+        return render_template("edit.html", editing = request.args['editing'], title = request.args['title'], blogid =request.args['blog_id'])
+    return render_template("edit.html", editing = request.args['editing'], title = request.args['title'])
 
 #temp page for adding blogs to db
 @app.route("/add", methods = ["POST", "GET"])
