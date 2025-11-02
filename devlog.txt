@@ -48,3 +48,11 @@ andrewT -- 2025/10/28 22:45 OVERVIEW OF DELIVERABLES
 andrewT -- 2025/10/29 11:00 UPDATES TO BLOG PAGE AND TEMPLATE RENDERING
 -Reformatted code in order display links to dedicated blog pages
 -Created page to display blogs for specific users
+
+tudorG -- 2025/10/29 10:00 BRAINSTORMING ON SEARCH PAGE AND ENTRY EDITING
+-Not much actual code written today, tried to figure out ways to implement a search page & to edit entries
+-Helped Andrew with SQL and HTML syntax
+
+tudorG -- 2025/10/30 10:00 HELPED ENTRY CREATION AND FORMATTED PAGE
+-Helped Andrew with the entry creation page
+-Improved formatting on entry creation page
