@@ -87,6 +87,14 @@ def loginhtml():
 
 #----------------------------------------------------------
 
+@app.route("/register.html")
+def registerhtml():
+    if 'username' in session:
+        return redirect("/")
+    return render_template("register.html")
+
+#----------------------------------------------------------
+
 @app.route("/register", methods = ["POST", "GET"])
 def register():
     if((not request.args and not request.form) or 'username' in session): # If not coming from login page or if already logged in
