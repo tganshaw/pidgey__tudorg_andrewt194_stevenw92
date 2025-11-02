@@ -6,7 +6,6 @@ from flask import redirect
 import sqlite3
 import blog
 
-
 DB_NAME = "Data/database.db"
 DB = sqlite3.connect(DB_NAME)
 DB_CURSOR = DB.cursor()
@@ -23,45 +22,70 @@ app.secret_key = "ttestingtestingnotfinalresult"
 def homepage():
     if 'username' not in session:
         return render_template("login.html")
-    USER_DB = sqlite3.connect(DB_NAME)
-    USER_DB_CURSOR = USER_DB.cursor()
 
-    USER_DB_CURSOR.execute(f"SELECT id FROM userdata WHERE username = \"{session['username']}\";")
-    userId = USER_DB_CURSOR.fetchone()[0]
+    DB = sqlite3.connect(DB_NAME)
+    DB_CURSOR = DB.cursor()
+
+    DB_CURSOR.execute(f"SELECT id FROM userdata WHERE username =\"{session['username']}\";")
+    userId = DB_CURSOR.fetchone()[0]
     session['userId'] = userId
-    USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM blogdata WHERE user = {userId};")
-    numBlogs = USER_DB_CURSOR.fetchone()[0]
-    print(blog.get_blogs(userId))
+    DB_CURSOR.execute(f"SELECT COUNT(*) FROM blogdata WHERE user = {userId};")
+    numBlogs = DB_CURSOR.fetchone()[0]
     arr = ""
     for i in blog.get_blogs(userId):
-        print(i)
-        print(i[1])
         blogTitle = i[0]
-        arr += f'<a href = /blog?blog_id={i[1]}&title={blogTitle}>{i[0]}</a><br>'
-    return render_template("userprofile.html", username = session['username'], numblogs = numBlogs, blogs = blog.get_blogs(userId), txt = arr)
+        blogId = i[1]
+        arr+= f"<a href = /blog?blog_id={blogId}>{blogTitle}</a><br>"
+    return render_template("userprofile.html", username = session["username"], numblogs = numBlogs, blogs = blog.get_blogs(userId), txt = arr)
 
-@app.route("/blog", methods = ["POST", "GET"])
+#----------------------------------------------------------
+
+@app.route("/blog", methods = ["POST","GET"])
 def blogpage():
-    x = blog.load_blog(request.args["blog_id"])
-    str = ""
-    for i in x:
-        str+=i[0]
-        str+="<br><br>"
-    if("blog_id" in request.args):
-        return render_template("blog.html", txt = str, title = request.args["title"], blogid = request.args["blog_id"])
-    return render_template("blog.html", txt = str, title = request.args["title"])
+    blogVar = blog.load_blog(request.args["blog_id"])
+    entries = ""
+    for entry in blogVar:
+        entries += entry[0]
+        entries +="<br>"
+    return render_template("blog.html", txt = entries, blog_id = request.args["blog_id"])
 
-@app.route("/register.html")
-def registerhtml():
-    if 'username' in session:
+#----------------------------------------------------------
+
+@app.route("/edit", methods = ["POST","GET"])
+def edit():
+    blogTitle = ""
+    if not 'username' in session:
         return redirect("/")
-    return render_template("register.html")
+    if("blog_id" in request.args):
+        blogTitle = blog.get_blog_name(request.args["blog_id"])
+        return render_template("edit.html", editing = request.args['editing'],title = blogTitle, blog_id = request.args['blog_id'])
+    return render_template("edit.html", editing = request.args['editing'], title = blogTitle)
+
+#----------------------------------------------------------
+
+@app.route("/add", methods = ["POST","GET"])
+def add():
+    if not 'username' in session:
+        return redirect("/")
+    blogId = 0;
+    if(not "blog_id" in request.args):
+        blog.create_blog(request.args['title'], session['userId'])
+        blogId = blog.get_blog_id(request.args['title'],session['userId'])
+        blog.create_entry(blogId,request.args['body'])
+    else:
+        blogId = request.args['blog_id']
+        blog.create_entry(blogId, request.args['body'])
+    return redirect(f"/blog?blog_id={blogId}")
+
+#----------------------------------------------------------
 
 @app.route("/login.html")
 def loginhtml():
     if 'username' in session:
         return redirect("/")
     return render_template("login.html")
+
+#----------------------------------------------------------
 
 @app.route("/register", methods = ["POST", "GET"])
 def register():
@@ -86,6 +110,8 @@ def register():
     USER_DB.close()
     return redirect("/")
 
+#----------------------------------------------------------
+
 @app.route("/login", methods = ["POST", "GET"])
 def login():
     if((not request.args and not request.form) or 'username' in session): # If not coming from login page or if already logged in
@@ -108,40 +134,13 @@ def login():
 
     return redirect("/")
 
+#----------------------------------------------------------
+
 @app.route("/logout")
 def logout():
     session.pop("username", None)
     return redirect("/")
 
-#temp page for creating blogs for testing
-@app.route("/edit", methods = ["POST", "GET"])
-def edit():
-    if not 'username' in session:
-        return redirect("/")
-    if("blog_id" in request.args):
-        return render_template("edit.html", editing = request.args['editing'], title = request.args['title'], blogid =request.args['blog_id'])
-    return render_template("edit.html", editing = request.args['editing'], title = request.args['title'])
-
-#temp page for adding blogs to db
-@app.route("/add", methods = ["POST", "GET"])
-def add():
-    if not 'username' in session:
-        return redirect("/")
-    blog.create_blog(request.args['title'], session['userId'])
-    blog.create_entry(request.args['blogid'], request.args['body'])
-    return redirect("/")
-
-@app.route("/displaydb") # testing only
-def displaydb():
-    TEST_DB = sqlite3.connect(DB_NAME)
-    TEST_DB_CURSOR = TEST_DB.cursor()
-    TEST_DB_CURSOR.execute("SELECT * FROM userdata")
-    rows = TEST_DB_CURSOR.fetchall()
-    for row in rows:
-        print(row)
-
-    TEST_DB.close()
-    return "rows printed in terminal"
 
 app.debug = True
 app.run()

@@ -77,5 +77,14 @@ def get_blogs(user):
     db.close()
     return fetch
 
+def get_blog_name(blog_id):
+    db = sqlite3.connect(DB_NAME)
+    cursor = db.cursor()
+    cursor.execute(f'SELECT blog_name FROM blogdata WHERE blog_id = {blog_id};')
+    cursorfetch = cursor.fetchone()[0]
+    db.commit()
+    db.close()
+    return cursorfetch
+
 if __name__ == "__main__":
     create_blog("asd", 11)
