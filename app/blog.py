@@ -23,6 +23,11 @@ def create_blog(blog_name, user):
     a = cursor.fetchone()
     if a:
         return
+    x = ""
+    for char in blog_name:
+        if char != '"':
+            x+=char
+    blog_name = x
     cursor.execute(f'INSERT INTO blogdata VALUES("{blog_name}", NULL, {user}, 0);')
     db.commit()
     db.close()
@@ -45,6 +50,11 @@ def create_entry(blog_id, txt):
     if(not a):
         a = [0]
     entry_id = a[0]
+    a = ""
+    for char in txt:
+        if char != '"':
+            a+=char
+    txt = a
     cursor.execute(f'INSERT INTO entrydata VALUES ({blog_id}, "{txt}", {entry_id});')
     cursor.execute(f'UPDATE blogdata SET entries = {entry_id+1} WHERE blog_id = {blog_id};')
     db.commit()
