@@ -49,10 +49,22 @@ andrewT -- 2025/10/29 11:00 UPDATES TO BLOG PAGE AND TEMPLATE RENDERING
 -Reformatted code in order display links to dedicated blog pages
 -Created page to display blogs for specific users
 
-tudorG -- 2025/10/29 10:00 BRAINSTORMING ON SEARCH PAGE AND ENTRY EDITING
+tudorG -- 2025/10/29 10:00 BRAINSTORMING ON SEARCH PAGE AND ENTRY CREATION
 -Not much actual code written today, tried to figure out ways to implement a search page & to edit entries
 -Helped Andrew with SQL and HTML syntax
 
 tudorG -- 2025/10/30 10:00 HELPED ENTRY CREATION AND FORMATTED PAGE
 -Helped Andrew with the entry creation page
 -Improved formatting on entry creation page
+
+tudorG -- 2025/11/2 14:00 FIXED ISSUES WITH TEXT DISPLAYING ON ENTRY CREATION
+-Fixed blog name not displaying properly when creating entries
+-Made adding entries redirect to the proper blog
+-Streamlined __init__.py to be more easily understandable
+
+tudorG -- 2025/11/3 10:00 FIXED ISSUES WITH QUOTATION MARKS IN ENTRIES
+-Fixed an issue where quotation marks would cause code to break
+
+tudorG -- 2025/11/4 18:00 ALLOWED OTHER USERS TO SEE BLOGS & FIXED ENTRY/TITLES
+-Made it so users can see other users' blogs without being able to edit them
+-Made it so users can't enter empty entries or titles for blogs
