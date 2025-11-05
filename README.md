@@ -5,8 +5,8 @@ Project Description: A Website with a login system and blog system with each blo
 
 Install Guide:
 - cd into repo
-- $pip install -r requirements.txt
+- run ``` $pip install -r requirements.txt ```
 
 Launch Codes:
-- cd app/
-- python \_\_init\_\_.py
+- cd into app folder
+- run ``` python __init__.py ```
