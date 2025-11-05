@@ -68,3 +68,8 @@ tudorG -- 2025/11/3 10:00 FIXED ISSUES WITH QUOTATION MARKS IN ENTRIES
 tudorG -- 2025/11/4 18:00 ALLOWED OTHER USERS TO SEE BLOGS & FIXED ENTRY/TITLES
 -Made it so users can see other users' blogs without being able to edit them
 -Made it so users can't enter empty entries or titles for blogs
+
+andrewT -- 2025/11/14 20:30 EXTERNAL README REVIEW
+- Need to revamp readme code segments as codeblocks
+- Need to include install requirements
+- Breakdown into step-by-step instructions
