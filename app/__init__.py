@@ -5,6 +5,7 @@ from flask import session
 from flask import redirect
 import sqlite3
 import blog
+import user
 
 DB_NAME = "Data/database.db"
 DB = sqlite3.connect(DB_NAME)
@@ -29,14 +30,9 @@ def homepage():
     DB_CURSOR.execute(f"SELECT id FROM userdata WHERE username =\"{session['username']}\";")
     userId = DB_CURSOR.fetchone()[0]
     session['userId'] = userId
-    DB_CURSOR.execute(f"SELECT COUNT(*) FROM blogdata WHERE user = {userId};")
-    numBlogs = DB_CURSOR.fetchone()[0]
-    arr = ""
-    for i in blog.get_blogs(userId):
-        blogTitle = i[0]
-        blogId = i[1]
-        arr+= f"<a href = /blog?blog_id={blogId}>{blogTitle}</a><br>"
-    return render_template("userprofile.html", username = session["username"], numblogs = numBlogs, blogs = blog.get_blogs(userId), txt = arr)
+    numBlogs = blog.get_num_blogs(userId)
+    arr = blog.get_blog_links(userId)
+    return render_template("userprofile.html", username = session["username"], numblogs = numBlogs, blogs = blog.get_blogs(userId), txt = arr, owner = "true")
 
 #----------------------------------------------------------
 
@@ -47,7 +43,11 @@ def blogpage():
     for entry in blogVar:
         entries += entry[0]
         entries +="<br>"
-    return render_template("blog.html", txt = entries, blog_id = request.args["blog_id"])
+    blogOwner = "false"
+    if('username' in session):
+        if(user.get_username(blog.get_blog_owner(request.args["blog_id"])) == session['username']):
+            blogOwner = "true"
+    return render_template("blog.html", txt = entries, blog_id = request.args["blog_id"], owner = blogOwner)
 
 #----------------------------------------------------------
 
@@ -69,13 +69,40 @@ def add():
         return redirect("/")
     blogId = 0;
     if(not "blog_id" in request.args):
+        if(request.args['title'] == "" or request.args["title"] == " "):
+            return render_template("edit.html", editing = "false", titleerror = "Title Can't Be Empty")
+        if(request.args['body'] == "" or request.args["body"] == " "):
+            return render_template("edit.html", editing = "false", bodyerror = "Body Can't Be Empty")
         blog.create_blog(request.args['title'], session['userId'])
         blogId = blog.get_blog_id(request.args['title'],session['userId'])
         blog.create_entry(blogId,request.args['body'])
     else:
+        blogTitle = blog.get_blog_name(request.args['blog_id'])
+        if(request.args['body'] == "" or request.args["body"] == " "):
+            return render_template("edit.html", editing = "true", title = blogTitle, blog_id = request.args["blog_id"], bodyerror = "Body Can't Be Empty")
         blogId = request.args['blog_id']
         blog.create_entry(blogId, request.args['body'])
     return redirect(f"/blog?blog_id={blogId}")
+
+#----------------------------------------------------------
+
+@app.route("/viewuser", methods=["POST","GET"])
+def viewuser():
+    userName = request.args["username"]
+    userId = user.get_user_id(userName)
+    numBlogs = blog.get_num_blogs(userId)
+    arr = blog.get_blog_links(userId)
+    blogOwner = "false"
+    if('username' in session):
+        if(userName == session['username']):
+            blogOwner = "true"
+    return render_template("userprofile.html", username = userName, numblogs = numBlogs , blogs = blog.get_blogs(userId), txt = arr, owner = blogOwner)
+
+#----------------------------------------------------------
+
+@app.route("/homepage.html")
+def homepagehtml():
+    return render_template("homepage.html")
 
 #----------------------------------------------------------
 

@@ -3,5 +3,7 @@
 <br>
 {{txt | safe}}
 <br>
-<a href={{"/edit?editing=true&blog_id=" ~ blog_id}}> Create Entry </a>
+{% if owner == "true" %}
+  <a href={{"/edit?editing=true&blog_id=" ~ blog_id}}> Create Entry </a>
+{% endif %}
 </html>

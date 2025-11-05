@@ -9,5 +9,7 @@ Blogs: <br>{{blogs}}<br>
 <br>
 <a href="/logout"> Log Out </a>
 <br>
-<a href="/edit?editing=false&title=none"> Create Blog </a>
+{% if owner == "true" %}
+  <a href="/edit?editing=false&title=none"> Create Blog </a>
+{% endif %}
 </html>

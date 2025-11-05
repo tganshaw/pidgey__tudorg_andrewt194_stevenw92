@@ -96,5 +96,31 @@ def get_blog_name(blog_id):
     db.close()
     return cursorfetch
 
+def get_blog_owner(blog_id):
+    db = sqlite3.connect(DB_NAME)
+    cursor = db.cursor()
+    cursor.execute(f'SELECT user FROM blogdata WHERE blog_id = {blog_id};')
+    cursorfetch = cursor.fetchone()[0]
+    db.commit()
+    db.close()
+    return cursorfetch
+
+def get_num_blogs(user):
+    db = sqlite3.connect(DB_NAME)
+    cursor = db.cursor()
+    cursor.execute(f"SELECT COUNT(*) FROM blogdata WHERE user = {user};")
+    cursorfetch = cursor.fetchone()[0]
+    db.commit()
+    db.close()
+    return cursorfetch
+
+def get_blog_links(user):
+    arr = ""
+    for i in get_blogs(user):
+        blogTitle = i[0]
+        blogId = i[1]
+        arr+= f"<a href = /blog?blog_id={blogId}>{blogTitle}</a><br>"
+    return arr
+
 if __name__ == "__main__":
     create_blog("asd", 11)

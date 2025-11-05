@@ -4,14 +4,14 @@
 
 <form action ="/add">
     {% if editing == "false" %}
-      <input type="text" name = "title" value = "Blog Title">
+      <input type="text" name = "title" value = "Blog Title"> {{titleerror}}
     {% else %}
       {{title}}
       <input type="hidden" name="title" value={{title}}>
       <input type="hidden" name="blog_id" value={{blog_id}}>
     {% endif %}
     <br>
-    <textarea name = "body" rows = "10" cols = "60">body</textarea>
+    <textarea name = "body" rows = "10" cols = "60">body</textarea> {{bodyerror}}
     <br>
     <input type = "submit" name = "sub1">
 </form>
