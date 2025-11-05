@@ -70,7 +70,11 @@ tudorG -- 2025/11/4 18:00 ALLOWED OTHER USERS TO SEE BLOGS & FIXED ENTRY/TITLES
 -Made it so users can't enter empty entries or titles for blogs
 -Also updated Install Guide and Launch Codes
 
-andrewT -- 2025/11/14 20:30 EXTERNAL README REVIEW
+andrewT -- 2025/11/4 20:30 EXTERNAL README REVIEW
 - Need to revamp readme code segments as codeblocks
 - Need to include install requirements
 - Breakdown into step-by-step instructions
+
+andrewT -- 2025/11/5 11:00 ADDED ENTRY EDITING
+- Added entry editing functionality for blogs owned by user
+- Relinked backend sitemap
