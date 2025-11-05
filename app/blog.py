@@ -18,16 +18,16 @@ def load_blog(blog_id):
 def create_blog(blog_name, user):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS blogdata(blog_name TEXT, blog_id INTEGER PRIMARY KEY AUTOINCREMENT, user INT, entries INT);")
-    cursor.execute(f'SELECT * FROM blogdata WHERE blog_name = "{blog_name}" AND user = {user};')
-    a = cursor.fetchone()
-    if a:
-        return
     x = ""
     for char in blog_name:
         if char != '"':
             x+=char
     blog_name = x
+    cursor.execute("CREATE TABLE IF NOT EXISTS blogdata(blog_name TEXT, blog_id INTEGER PRIMARY KEY AUTOINCREMENT, user INT, entries INT);")
+    cursor.execute(f'SELECT * FROM blogdata WHERE blog_name = "{blog_name}" AND user = {user};')
+    a = cursor.fetchone()
+    if a:
+        return
     cursor.execute(f'INSERT INTO blogdata VALUES("{blog_name}", NULL, {user}, 0);')
     db.commit()
     db.close()
@@ -70,6 +70,11 @@ def edit_entry(txt, blog_id, entry_id):
 def get_blog_id(blog_name, user):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
+    x = ""
+    for char in blog_name:
+        if char != '"':
+            x+=char
+    blog_name = x
     cursor.execute(f'SELECT blog_id FROM blogdata WHERE blog_name = "{blog_name}" AND user = {user};')
     cursorfetch = cursor.fetchone()
     db.commit()

@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 app.secret_key = "ttestingtestingnotfinalresult"
 
-@app.route("/")
+@app.route("/profile")
 def homepage():
     if 'username' not in session:
         return render_template("login.html")
@@ -39,14 +39,20 @@ def homepage():
 @app.route("/blog", methods = ["POST","GET"])
 def blogpage():
     blogVar = blog.load_blog(request.args["blog_id"])
-    entries = ""
-    for entry in blogVar:
-        entries += entry[0]
-        entries +="<br>"
     blogOwner = "false"
     if('username' in session):
         if(user.get_username(blog.get_blog_owner(request.args["blog_id"])) == session['username']):
             blogOwner = "true"
+    entries = ""
+    for i in range(len(blogVar)):
+        entries += blogVar[i][0]
+        if blogOwner == "true":
+            entries+="<br>"
+            blog_name = blog.get_blog_name(request.args["blog_id"])
+            blog_id = request.args["blog_id"]
+            entries+=f"<a href = /edit?editing=true&blog_id={blog_id}&entry_id={i}> edit this entry</a>"
+        entries +="<br>"
+
     return render_template("blog.html", txt = entries, blog_id = request.args["blog_id"], owner = blogOwner)
 
 #----------------------------------------------------------
@@ -58,7 +64,10 @@ def edit():
         return redirect("/")
     if("blog_id" in request.args):
         blogTitle = blog.get_blog_name(request.args["blog_id"])
-        return render_template("edit.html", editing = request.args['editing'],title = blogTitle, blog_id = request.args['blog_id'])
+        if("entry_id" in request.args):
+            txt = blog.get_entry(request.args['blog_id'], request.args["entry_id"])[0]
+            return render_template("edit.html", editing = request.args['editing'], title = blogTitle, blog_id = request.args['blog_id'], entry_id = request.args["entry_id"], txt = txt)
+        return render_template("edit.html", editing = request.args['editing'],title = blogTitle, blog_id = request.args['blog_id'], entry_id = -1)
     return render_template("edit.html", editing = request.args['editing'], title = blogTitle)
 
 #----------------------------------------------------------
@@ -81,7 +90,10 @@ def add():
         if(request.args['body'] == "" or request.args["body"] == " "):
             return render_template("edit.html", editing = "true", title = blogTitle, blog_id = request.args["blog_id"], bodyerror = "Body Can't Be Empty")
         blogId = request.args['blog_id']
-        blog.create_entry(blogId, request.args['body'])
+        if(request.args['entry_id'] != -1):
+            blog.edit_entry(request.args['body'], blogId, request.args['entry_id'])
+        else:
+            blog.create_entry(blogId, request.args['body'])
     return redirect(f"/blog?blog_id={blogId}")
 
 #----------------------------------------------------------
@@ -100,7 +112,7 @@ def viewuser():
 
 #----------------------------------------------------------
 
-@app.route("/homepage.html")
+@app.route("/")
 def homepagehtml():
     return render_template("homepage.html")
 

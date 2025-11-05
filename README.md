@@ -26,7 +26,7 @@ Project Description: A Website with a login system and blog system with each blo
 ### Activate virtual environment:
 
   - Linux/Mac:
-    ``` {{venv_path}}/bin/activate ```
+    ``` source {{venv_path}}/bin/activate ```
     
   - Windows:
     ``` {{venv_path}}\Scripts\activate ```
