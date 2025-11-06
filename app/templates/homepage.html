@@ -6,7 +6,7 @@
   {% if logged_in == "false" %}
     <a href = "/login.html"> Log In </a>
   {% else %}
-    <a href = "/viewuser"> Profile </a>
+    <a href = "/access"> Profile </a>
   {% endif %}
 
   <form action = "/viewuser" method="GET">
@@ -14,10 +14,6 @@
     <input type = "SUBMIT">
   </form>
 
-  <form action ="/search" method = "POST">
-  Search for users: <input type="TEXT" name="searchQuery"> <br>
-  <input type="SUBMIT"> <br>
-  </form>
 
   <a href="/logout"> Log Out </a>
 </html>

@@ -89,9 +89,8 @@ def add():
         blog.create_entry(blogId,request.args['body'])
     else:
         blogTitle = blog.get_blog_name(request.args['blog_id'])
-        print(blogTitle)
         if(request.args['body'] == "" or request.args["body"] == " "):
-            return render_template("edit.html", editing = "true", title = blogTitle, blog_id = request.args["blog_id"], bodyerror = "Body Can't Be Empty")
+            return render_template("edit.html", editing = "true", title = blogTitle, blog_id = request.args["blog_id"], bodyerror = "Body Can't Be Empty", entry_id = request.args["entry_id"])
         blogId = request.args['blog_id']
         if(request.args['entry_id'] != "-1"):
             print(request.args['entry_id'])
@@ -108,15 +107,26 @@ def viewuser():
         userName = request.args["username"]
         if userName == "":
             return render_template("homepage.html",user_error = "Please enter a username")
-        if user.user_exists(userName) == False:
-            return render_template("homepage.html", user_error = "User does not exist")
+        user_list = user.find_user(userName)
+        if len(user_list) == 0:
+            return render_template("homepage.html", user_error = "No such users exist")
+        txt = ""
+        for i in range(len(user_list)):
+            txt+=f'<a href = "/access?username={user_list[i][0]}">{user_list[i][0]}</a><br>'
+        return render_template("search_results.html", txt = txt)
+    else:
+        redirect("/access")
+
+#----------------------------------------------------------
+@app.route("/access")
+def access():
+    if 'username' in request.args:
+        userName = request.args['username']
         userId = user.get_user_id(userName)
         numBlogs = blog.get_num_blogs(userId)
         arr = blog.get_blog_links(userId)
-        blogOwner = "false"
-        if('username' in session):
-            if(userName == session['username']):
-                blogOwner = "true"
+        blogOwner = str('username' in session and session['username'] == userName).lower()
+        print(blogOwner)
         return render_template("userprofile.html", username = userName, numblogs = numBlogs , blogs = blog.get_blogs(userId), txt = arr, owner = blogOwner)
     else:
         if 'username' in session:
@@ -124,18 +134,21 @@ def viewuser():
             userId = user.get_user_id(userName)
             numBlogs = blog.get_num_blogs(userId)
             arr = blog.get_blog_links(userId)
-            blogOwner = "true"
-            return render_template("userprofile.html", username = userName, numblogs = numBlogs , blogs = blog.get_blogs(userId), txt = arr, owner = blogOwner)
-        else:
-            return redirect("/")
-
-#----------------------------------------------------------
+            return render_template("userprofile.html", username = userName, numblogs = numBlogs , blogs = blog.get_blogs(userId), txt = arr, owner = "true")
+        return redirect("/")
 
 @app.route("/")
 def homepagehtml():
     loggedIn = "false"
     if 'username' in session:
         loggedIn = "true"
+        DB = sqlite3.connect(DB_NAME)
+        DB_CURSOR = DB.cursor()
+        DB_CURSOR.execute(f"SELECT id FROM userdata WHERE username =\"{session['username']}\";")
+        userId = DB_CURSOR.fetchone()[0]
+        session['userId'] = userId
+    else:
+        return redirect("/login.html")
     return render_template("homepage.html",logged_in = loggedIn)
 
 #----------------------------------------------------------
@@ -174,7 +187,6 @@ def register():
     USER_DB_CURSOR.execute(INSERT_STRING)
     print(request.form['username'] + ", " + request.form['password'] + ", " + INSERT_STRING)
     session['username'] = request.form['username']
-    session['userId'] = user.get_user_id(session['username'])
 
     USER_DB.commit()
     USER_DB.close()
@@ -198,7 +210,6 @@ def login():
     if(not userPass == request.form["password"]):
         return render_template("login.html", password_error = "Password is incorrect")
     session["username"] = request.form["username"]
-    session['userId'] = user.get_user_id(session['username'])
 
     USER_DB.commit()
     USER_DB.close()

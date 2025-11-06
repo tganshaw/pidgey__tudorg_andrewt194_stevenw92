@@ -28,3 +28,12 @@ def user_exists(username):
     db.commit()
     db.close()
     return cursorfetch == 1
+
+def find_user(string):
+    db = sqlite3.connect(DB_NAME)
+    cursor = db.cursor()
+    cursor.execute(f"SELECT * FROM userdata WHERE username LIKE '%{string}%';")
+    cursorfetch = cursor.fetchall()
+    db.commit()
+    db.close()
+    return cursorfetch

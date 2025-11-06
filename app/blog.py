@@ -63,7 +63,8 @@ def create_entry(blog_id, txt):
 def edit_entry(txt, blog_id, entry_id):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    cursor.execute(f'UPDATE entrydata SET text = "{txt}" WHERE blog_id = {blog_id} AND entry_id = {entry_id}')
+    print(f'UPDATE entrydata SET text = "{txt}" WHERE blog_id = {blog_id} AND entry_id = {entry_id};')
+    cursor.execute(f'UPDATE entrydata SET text = "{txt}" WHERE blog_id = {blog_id} AND entry_id = {entry_id};')
     db.commit()
     db.close()
 
