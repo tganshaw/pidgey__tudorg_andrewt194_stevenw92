@@ -38,6 +38,9 @@ def homepage():
 
 @app.route("/blog", methods = ["POST","GET"])
 def blogpage():
+    if("blog_id" not in request.args):
+        return redirect("/")
+    blog_name = blog.get_blog_name(request.args["blog_id"])
     blogVar = blog.load_blog(request.args["blog_id"])
     blogOwner = "false"
     if('username' in session):
@@ -47,13 +50,12 @@ def blogpage():
     for i in range(len(blogVar)):
         entries += blogVar[i][0]
         if blogOwner == "true":
-            entries+="<br>"
-            blog_name = blog.get_blog_name(request.args["blog_id"])
+            #entries+="<br>"
             blog_id = request.args["blog_id"]
             entries+=f"<a href = /edit?editing=true&blog_id={blog_id}&entry_id={i}> edit this entry</a>"
         entries +="<br>"
 
-    return render_template("blog.html", txt = entries, blog_id = request.args["blog_id"], owner = blogOwner)
+    return render_template("blog.html", txt = entries, blog_id = request.args["blog_id"], owner = blogOwner, blog_title = blog_name)
 
 #----------------------------------------------------------
 
@@ -87,10 +89,12 @@ def add():
         blog.create_entry(blogId,request.args['body'])
     else:
         blogTitle = blog.get_blog_name(request.args['blog_id'])
+        print(blogTitle)
         if(request.args['body'] == "" or request.args["body"] == " "):
             return render_template("edit.html", editing = "true", title = blogTitle, blog_id = request.args["blog_id"], bodyerror = "Body Can't Be Empty")
         blogId = request.args['blog_id']
-        if(request.args['entry_id'] != -1):
+        if(request.args['entry_id'] != "-1"):
+            print(request.args['entry_id'])
             blog.edit_entry(request.args['body'], blogId, request.args['entry_id'])
         else:
             blog.create_entry(blogId, request.args['body'])
@@ -100,21 +104,39 @@ def add():
 
 @app.route("/viewuser", methods=["POST","GET"])
 def viewuser():
-    userName = request.args["username"]
-    userId = user.get_user_id(userName)
-    numBlogs = blog.get_num_blogs(userId)
-    arr = blog.get_blog_links(userId)
-    blogOwner = "false"
-    if('username' in session):
-        if(userName == session['username']):
+    if 'username' in request.args:
+        userName = request.args["username"]
+        if userName == "":
+            return render_template("homepage.html",user_error = "Please enter a username")
+        if user.user_exists(userName) == False:
+            return render_template("homepage.html", user_error = "User does not exist")
+        userId = user.get_user_id(userName)
+        numBlogs = blog.get_num_blogs(userId)
+        arr = blog.get_blog_links(userId)
+        blogOwner = "false"
+        if('username' in session):
+            if(userName == session['username']):
+                blogOwner = "true"
+        return render_template("userprofile.html", username = userName, numblogs = numBlogs , blogs = blog.get_blogs(userId), txt = arr, owner = blogOwner)
+    else:
+        if 'username' in session:
+            userName = session['username']
+            userId = user.get_user_id(userName)
+            numBlogs = blog.get_num_blogs(userId)
+            arr = blog.get_blog_links(userId)
             blogOwner = "true"
-    return render_template("userprofile.html", username = userName, numblogs = numBlogs , blogs = blog.get_blogs(userId), txt = arr, owner = blogOwner)
+            return render_template("userprofile.html", username = userName, numblogs = numBlogs , blogs = blog.get_blogs(userId), txt = arr, owner = blogOwner)
+        else:
+            return redirect("/")
 
 #----------------------------------------------------------
 
 @app.route("/")
 def homepagehtml():
-    return render_template("homepage.html")
+    loggedIn = "false"
+    if 'username' in session:
+        loggedIn = "true"
+    return render_template("homepage.html",logged_in = loggedIn)
 
 #----------------------------------------------------------
 
@@ -136,7 +158,7 @@ def registerhtml():
 
 @app.route("/register", methods = ["POST", "GET"])
 def register():
-    if((not request.args and not request.form) or 'username' in session): # If not coming from login page or if already logged in
+    if('username' in session): # If not coming from login page or if already logged in
         return redirect("/")
 
     USER_DB = sqlite3.connect(DB_NAME)
@@ -152,6 +174,7 @@ def register():
     USER_DB_CURSOR.execute(INSERT_STRING)
     print(request.form['username'] + ", " + request.form['password'] + ", " + INSERT_STRING)
     session['username'] = request.form['username']
+    session['userId'] = user.get_user_id(session['username'])
 
     USER_DB.commit()
     USER_DB.close()
@@ -161,7 +184,7 @@ def register():
 
 @app.route("/login", methods = ["POST", "GET"])
 def login():
-    if((not request.args and not request.form) or 'username' in session): # If not coming from login page or if already logged in
+    if('username' in session): # If not coming from login page or if already logged in
         return redirect("/")
     USER_DB = sqlite3.connect(DB_NAME)
     USER_DB_CURSOR = USER_DB.cursor()
@@ -175,6 +198,7 @@ def login():
     if(not userPass == request.form["password"]):
         return render_template("login.html", password_error = "Password is incorrect")
     session["username"] = request.form["username"]
+    session['userId'] = user.get_user_id(session['username'])
 
     USER_DB.commit()
     USER_DB.close()
@@ -186,7 +210,7 @@ def login():
 @app.route("/logout")
 def logout():
     session.pop("username", None)
-    return redirect("/")
+    return redirect("/login.html")
 
 
 app.debug = True

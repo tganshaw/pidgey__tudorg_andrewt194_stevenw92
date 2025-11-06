@@ -78,3 +78,8 @@ andrewT -- 2025/11/4 20:30 EXTERNAL README REVIEW
 andrewT -- 2025/11/5 11:00 ADDED ENTRY EDITING
 - Added entry editing functionality for blogs owned by user
 - Relinked backend sitemap
+
+tudorG -- 2025/11/5 20:00 FIXED MANY ISSUES
+-Fixed issues with username searching returning errors with invalid usernames
+-Fixed issues with entry creation failing
+-Fixed issues with site crashing when users go directly to links via userprofile

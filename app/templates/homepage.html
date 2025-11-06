@@ -1,14 +1,16 @@
 <html>
 <div class="navbar">
-  <a href = "/" > Go To Homepage </a>
-</div class="navbar">
-  <h1> You are logged in. </h1>
-  {{username}}
 
-  <a href="/logout"> Log Out </a>
+</div class="navbar">
+
+  {% if logged_in == "false" %}
+    <a href = "/login.html"> Log In </a>
+  {% else %}
+    <a href = "/viewuser"> Profile </a>
+  {% endif %}
 
   <form action = "/viewuser" method="GET">
-    Username: <input type="TEXT" name="username"><br>
+    Username: <input type="TEXT" name="username"> {{user_error}}<br>
     <input type = "SUBMIT">
   </form>
 
@@ -16,4 +18,6 @@
   Search for users: <input type="TEXT" name="searchQuery"> <br>
   <input type="SUBMIT"> <br>
   </form>
+
+  <a href="/logout"> Log Out </a>
 </html>

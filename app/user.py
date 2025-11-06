@@ -19,3 +19,12 @@ def get_user_id(username):
     db.commit()
     db.close()
     return cursorfetch
+
+def user_exists(username):
+    db = sqlite3.connect(DB_NAME)
+    cursor = db.cursor()
+    cursor.execute(f"SELECT COUNT(*) FROM userdata WHERE username = '{username}';")
+    cursorfetch = cursor.fetchone()[0]
+    db.commit()
+    db.close()
+    return cursorfetch == 1
