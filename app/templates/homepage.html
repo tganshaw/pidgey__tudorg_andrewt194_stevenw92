@@ -2,21 +2,18 @@
 <div class="navbar">
 
 </div class="navbar">
-
   {% if logged_in == "false" %}
     <a href = "/login.html"> Log In </a>
   {% else %}
-    <a href = "/access"> Profile </a>
+    <a href = "/access"> Profile Page</a>
   {% endif %}
 
   <form action = "/viewuser" method="GET">
-    Username: <input type="TEXT" name="username"> {{user_error}}<br>
+    Search for Username: <input type="TEXT" name="username"> {{user_error}}<br>
     <input type = "SUBMIT">
   </form>
-  <br><br>
-
   <form action = "/viewblog" method = "GET">
-    Blog Title: <input type = "TEXT" name = "blog_title"> {{blog_error}} <br>
+    Search for Blog Title: <input type = "TEXT" name = "blog_title"> {{blog_error}} <br>
     <input type = "SUBMIT">
   </form>
 
