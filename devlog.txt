@@ -86,3 +86,6 @@ tudorG -- 2025/11/5 20:00 FIXED MANY ISSUES
 
 tudorG -- 2025/11/6 20:00 ADDED BLOG VIEWING
 -Added /viewblog, allows users to search blogs by title and go to the blog page, or the user who made the blogs
+
+andrewT -- 2025/11/7 10:45 Fixed blog editing
+-fixed minor bug with inserting quotations in body text
