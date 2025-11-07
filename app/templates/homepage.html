@@ -13,7 +13,12 @@
     Username: <input type="TEXT" name="username"> {{user_error}}<br>
     <input type = "SUBMIT">
   </form>
+  <br><br>
 
+  <form action = "/viewblog" method = "GET">
+    Blog Title: <input type = "TEXT" name = "blog_title"> {{blog_error}} <br>
+    <input type = "SUBMIT">
+  </form>
 
   <a href="/logout"> Log Out </a>
 </html>

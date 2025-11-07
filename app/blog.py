@@ -128,5 +128,14 @@ def get_blog_links(user):
         arr+= f"<a href = /blog?blog_id={blogId}>{blogTitle}</a><br>"
     return arr
 
+def find_blog(string):
+    db = sqlite3.connect(DB_NAME)
+    cursor = db.cursor()
+    cursor.execute(f"SELECT * FROM blogdata WHERE blog_name LIKE '%{string}%';")
+    cursorfetch = cursor.fetchall()
+    db.commit()
+    db.close()
+    return cursorfetch
+
 if __name__ == "__main__":
     create_blog("asd", 11)

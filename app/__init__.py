@@ -118,6 +118,27 @@ def viewuser():
         redirect("/access")
 
 #----------------------------------------------------------
+
+@app.route("/viewblog",methods = ["POST","GET"])
+def viewblog():
+    if 'blog_title' in request.args:
+        blog_name = request.args["blog_title"]
+        if blog_name == "":
+            return render_template("homepage.html", blog_error = "Please enter a blog")
+        blog_list = blog.find_blog(blog_name)
+        if len(blog_list) == 0:
+            return render_template("homepage.html", blog_error = "No such blogs exist")
+        txt = ""
+        for i in range(len(blog_list)):
+            blog_id = blog_list[i][1]
+            blog_title = blog_list[i][0]
+            user_name = user.get_username(blog_list[i][2])
+            txt+=f"<a href = '/blog?blog_id={blog_id}'>{blog_title} by user {user_name}</a><br>"
+        return render_template("search_results.html",txt = txt)
+    return redirect("/")
+
+#----------------------------------------------------------
+
 @app.route("/access")
 def access():
     if 'username' in request.args:
@@ -136,6 +157,8 @@ def access():
             arr = blog.get_blog_links(userId)
             return render_template("userprofile.html", username = userName, numblogs = numBlogs , blogs = blog.get_blogs(userId), txt = arr, owner = "true")
         return redirect("/")
+
+#----------------------------------------------------------
 
 @app.route("/")
 def homepagehtml():
