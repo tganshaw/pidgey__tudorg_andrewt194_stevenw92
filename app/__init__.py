@@ -133,7 +133,10 @@ def viewblog():
             blog_id = blog_list[i][1]
             blog_title = blog_list[i][0]
             user_name = user.get_username(blog_list[i][2])
-            txt+=f"<a href = '/blog?blog_id={blog_id}'>{blog_title} by user {user_name}</a><br>"
+            txt+=f"<a href = '/blog?blog_id={blog_id}'>{blog_title}</a>"
+            txt+=" by "
+            txt+=f"<a href = '/access?username={user_name}'> {user_name} </a>"
+            txt+="<br>"
         return render_template("search_results.html",txt = txt)
     return redirect("/")
 

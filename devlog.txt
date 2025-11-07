@@ -83,3 +83,6 @@ tudorG -- 2025/11/5 20:00 FIXED MANY ISSUES
 -Fixed issues with username searching returning errors with invalid usernames
 -Fixed issues with entry creation failing
 -Fixed issues with site crashing when users go directly to links via userprofile
+
+tudorG -- 2025/11/6 20:00 ADDED BLOG VIEWING
+-Added /viewblog, allows users to search blogs by title and go to the blog page, or the user who made the blogs
