@@ -106,7 +106,7 @@ def viewuser():
     if 'username' in request.args:
         userName = request.args["username"]
         if userName == "":
-            return render_template("homepage.html",user_error = "Please enter a username")
+            userName = '%'
         user_list = user.find_user(userName)
         if len(user_list) == 0:
             return render_template("homepage.html", user_error = "No such users exist")
@@ -124,7 +124,7 @@ def viewblog():
     if 'blog_title' in request.args:
         blog_name = request.args["blog_title"]
         if blog_name == "":
-            return render_template("homepage.html", blog_error = "Please enter a blog")
+            blog_name = "%"
         blog_list = blog.find_blog(blog_name)
         if len(blog_list) == 0:
             return render_template("homepage.html", blog_error = "No such blogs exist")
@@ -200,19 +200,28 @@ def register():
     if('username' in session): # If not coming from login page or if already logged in
         return redirect("/")
 
+    userName = request.form['username']
+    temp = ""
+    for i in userName:
+        if i != '"':
+            temp += i
+    userName = temp
+    if(len(userName) < 1):
+        return render_template("register.html", username_error = "Please enter a valid username")
+
     USER_DB = sqlite3.connect(DB_NAME)
     USER_DB_CURSOR = USER_DB.cursor()
 
-    USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM userdata WHERE username = '{request.form['username']}';")
+    USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM userdata WHERE username = '{userName}';")
     alreadyExists = USER_DB_CURSOR.fetchone()[0]
     if(alreadyExists != 0):
         return render_template("register.html", username_error = "Username already taken")
 
 
-    INSERT_STRING = f"INSERT INTO userdata VALUES(\"{request.form['username']}\",\"{request.form['password']}\", NULL);"
+    INSERT_STRING = f"INSERT INTO userdata VALUES(\"{userName}\",\"{request.form['password']}\", NULL);"
     USER_DB_CURSOR.execute(INSERT_STRING)
     print(request.form['username'] + ", " + request.form['password'] + ", " + INSERT_STRING)
-    session['username'] = request.form['username']
+    session['username'] = userName
 
     USER_DB.commit()
     USER_DB.close()

@@ -1,12 +1,16 @@
-<html>
-<div class="navbar">
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
 
+<html>
+
+<div class="navbar">
+  <a href='/' style="margin-right:3vw">Home</a>
+  <a href = "/access" style = "margin-right:3vw"> Profile Page</a>
+  <a href="/logout" style="margin-right:3vw">Log Out</a>
 </div class="navbar">
-  {% if logged_in == "false" %}
-    <a href = "/login.html"> Log In </a>
-  {% else %}
-    <a href = "/access"> Profile Page</a>
-  {% endif %}
+
+<br><br>
 
   <form action = "/viewuser" method="GET">
     Search for Username: <input type="TEXT" name="username"> {{user_error}}<br>
@@ -17,5 +21,5 @@
     <input type = "SUBMIT">
   </form>
 
-  <a href="/logout"> Log Out </a>
+
 </html>
