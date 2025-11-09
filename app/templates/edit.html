@@ -1,17 +1,17 @@
 <html>
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <div class="navbar">
-  <a href='/' style="margin-right:3vw">Home</a>
-  <a href = "/access" style = "margin-right:3vw"> Profile Page</a>
-  <a href="/logout" style="margin-right:3vw">Log Out</a>
+  <a href='/'>Home</a>
+  <a href = "/access" style = "margin-right:3vw; margin-left:3vw"> Profile Page</a>
+  <a href="/logout">Log Out</a>
 </div class="navbar">
 
 <br><br>
 
 
-
+<div class = "content">
 <form action ="/add">
     {% if editing == "false" %}
       <input type="text" name = "title" placeholder="Blog Title"> {{titleerror}}
@@ -30,5 +30,5 @@
     <br>
     <input type = "submit" name = "sub1">
 </form>
-
+</div class = "content">
 </html>

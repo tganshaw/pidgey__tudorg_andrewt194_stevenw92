@@ -1,25 +1,25 @@
 <head>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 
 <html>
 
 <div class="navbar">
-  <a href='/' style="margin-right:3vw">Home</a>
-  <a href = "/access" style = "margin-right:3vw"> Profile Page</a>
-  <a href="/logout" style="margin-right:3vw">Log Out</a>
+  <a href='/'>Home</a>
+  <a href = "/access" style = "margin-right:3vw; margin-left:3vw"> Profile Page</a>
+  <a href="/logout">Log Out</a>
 </div class="navbar">
 
 <br><br>
 
+<div class = "content">
   <form action = "/viewuser" method="GET">
-    Search for Username: <input type="TEXT" name="username"> {{user_error}}<br>
-    <input type = "SUBMIT">
+    Search for Username: <input type="TEXT" name="username">&nbsp;<input type = "SUBMIT">&nbsp;{{user_error}}
   </form>
   <form action = "/viewblog" method = "GET">
-    Search for Blog Title: <input type = "TEXT" name = "blog_title"> {{blog_error}} <br>
-    <input type = "SUBMIT">
+    Search for Blog Title: <input type = "TEXT" name = "blog_title">&nbsp;<input type = "SUBMIT">&nbsp;{{blog_error}}
   </form>
-
+</div class = "content">
 
 </html>
