@@ -1,7 +1,7 @@
 # The *B*rilliant *Log* by Pidgey
 Roster/Roles: Tudor Ganshaw/Project Manager, Andrew Tsai/Dev, Steven Wu/Dev
 
-Project Description: A Website with a login system and blog system with each blog being stored to a specific user and that user being able to edit it by adding new entries.
+Project Description: A website where each user can make multiple blogs, create and edit entries for each of those blogs, and also search for and view the blogs of other users.
 
 # Install Guide:
 
