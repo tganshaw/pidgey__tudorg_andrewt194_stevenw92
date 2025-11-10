@@ -17,7 +17,7 @@ DB_CURSOR.execute("CREATE TABLE IF NOT EXISTS entrydata(blog_id INT, text TEXT, 
 
 app = Flask(__name__)
 
-app.secret_key = "ttestingtestingnotfinalresult"
+app.secret_key = "83ut83ojreoikdlshg3958u4wjtse09gol.2j4qwpg9sjo3w"
 
 @app.route("/profile")
 def homepage():
@@ -68,7 +68,16 @@ def edit():
         blogTitle = blog.get_blog_name(request.args["blog_id"])
         if("entry_id" in request.args):
             txt = blog.get_entry(request.args['blog_id'], request.args["entry_id"])[0]
-            return render_template("edit.html", editing = request.args['editing'], title = blogTitle, blog_id = request.args['blog_id'], entry_id = request.args["entry_id"], txt = txt)
+            newtxt = ""
+            i = 0
+            while i < len(txt):
+                if(txt[i:i+4] == "<br>"):
+                    newtxt+="\n"
+                    i+=4
+                else:
+                    newtxt += txt[i]
+                    i+=1
+            return render_template("edit.html", editing = request.args['editing'], title = blogTitle, blog_id = request.args['blog_id'], entry_id = request.args["entry_id"], txt = newtxt)
         return render_template("edit.html", editing = request.args['editing'],title = blogTitle, blog_id = request.args['blog_id'], entry_id = -1)
     return render_template("edit.html", editing = request.args['editing'], title = blogTitle)
 
@@ -86,17 +95,34 @@ def add():
             return render_template("edit.html", editing = "false", bodyerror = "Body Can't Be Empty")
         blog.create_blog(request.args['title'], session['userId'])
         blogId = blog.get_blog_id(request.args['title'],session['userId'])
-        blog.create_entry(blogId,request.args['body'])
+        txt = ""
+        for i in request.args['body']:
+            if i == "\n":
+                txt+="<br>"
+            else:
+                txt+= i
+        blog.create_entry(blogId, txt)
     else:
         blogTitle = blog.get_blog_name(request.args['blog_id'])
         if(request.args['body'] == "" or request.args["body"] == " "):
             return render_template("edit.html", editing = "true", title = blogTitle, blog_id = request.args["blog_id"], bodyerror = "Body Can't Be Empty", entry_id = request.args["entry_id"])
         blogId = request.args['blog_id']
         if(request.args['entry_id'] != "-1"):
-            print(request.args['entry_id'])
-            blog.edit_entry(request.args['body'], blogId, request.args['entry_id'])
+            txt = ""
+            for i in request.args['body']:
+                if i == "\n":
+                    txt+="<br>"
+                else:
+                    txt+= i
+            blog.edit_entry(txt, blogId, request.args['entry_id'])
         else:
-            blog.create_entry(blogId, request.args['body'])
+            txt = ""
+            for i in request.args['body']:
+                if i == "\n":
+                    txt+="<br>"
+                else:
+                    txt+= i
+            blog.create_entry(blogId, txt)
     return redirect(f"/blog?blog_id={blogId}")
 
 #----------------------------------------------------------
@@ -259,5 +285,5 @@ def logout():
     return redirect("/login.html")
 
 
-app.debug = True
+# app.debug = True
 app.run()
