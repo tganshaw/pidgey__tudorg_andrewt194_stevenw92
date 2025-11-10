@@ -95,3 +95,4 @@ tudorG -- 2025/11/9 17:00 FIXED REGISTRATION ISSUE, ADDED NAVBAR AND CSS
 -Added a navigation bar
 -Added CSS
 -Also updated readme and design doc to better reflect the final product
+-Also fixed an error where the site would break if a user had a session saved in the browser if a new instance was ran without that user's info in the database

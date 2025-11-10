@@ -24,6 +24,9 @@ def homepage():
     if 'username' not in session:
         return render_template("login.html")
 
+    if(not user.user_exists(session['username'])):
+        return redirect("/logout")
+
     DB = sqlite3.connect(DB_NAME)
     DB_CURSOR = DB.cursor()
 
@@ -64,6 +67,8 @@ def edit():
     blogTitle = ""
     if not 'username' in session:
         return redirect("/")
+    if(not user.user_exists(session['username'])):
+        return redirect("/logout")
     if("blog_id" in request.args):
         blogTitle = blog.get_blog_name(request.args["blog_id"])
         if("entry_id" in request.args):
@@ -87,6 +92,8 @@ def edit():
 def add():
     if not 'username' in session:
         return redirect("/")
+    if(not user.user_exists(session['username'])):
+        return redirect("/logout")
     blogId = 0;
     if(not "blog_id" in request.args):
         if(request.args['title'] == "" or request.args["title"] == " "):
@@ -176,11 +183,14 @@ def access():
         numBlogs = blog.get_num_blogs(userId)
         arr = blog.get_blog_links(userId)
         blogOwner = str('username' in session and session['username'] == userName).lower()
-        print(blogOwner)
+        # print(blogOwner)
         return render_template("userprofile.html", username = userName, numblogs = numBlogs , blogs = blog.get_blogs(userId), txt = arr, owner = blogOwner)
     else:
         if 'username' in session:
+            if(not user.user_exists(session['username'])):
+                return redirect("/logout")
             userName = session['username']
+            # print(userName)
             userId = user.get_user_id(userName)
             numBlogs = blog.get_num_blogs(userId)
             arr = blog.get_blog_links(userId)
@@ -193,6 +203,8 @@ def access():
 def homepagehtml():
     loggedIn = "false"
     if 'username' in session:
+        if(not user.user_exists(session['username'])):
+            return redirect("/logout")
         loggedIn = "true"
         DB = sqlite3.connect(DB_NAME)
         DB_CURSOR = DB.cursor()
@@ -246,7 +258,7 @@ def register():
 
     INSERT_STRING = f"INSERT INTO userdata VALUES(\"{userName}\",\"{request.form['password']}\", NULL);"
     USER_DB_CURSOR.execute(INSERT_STRING)
-    print(request.form['username'] + ", " + request.form['password'] + ", " + INSERT_STRING)
+    # print(request.form['username'] + ", " + request.form['password'] + ", " + INSERT_STRING)
     session['username'] = userName
 
     USER_DB.commit()
