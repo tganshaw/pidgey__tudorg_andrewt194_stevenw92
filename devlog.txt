@@ -94,3 +94,4 @@ tudorG -- 2025/11/9 17:00 FIXED REGISTRATION ISSUE, ADDED NAVBAR AND CSS
 -Fixed an issue with registration breaking with special characters
 -Added a navigation bar
 -Added CSS
+-Also updated readme and design doc to better reflect the final product
