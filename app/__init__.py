@@ -30,7 +30,7 @@ def homepage():
     DB = sqlite3.connect(DB_NAME)
     DB_CURSOR = DB.cursor()
 
-    DB_CURSOR.execute(f"SELECT id FROM userdata WHERE username =\"{session['username']}\";")
+    DB_CURSOR.execute(f"SELECT id FROM userdata WHERE username = ?;", (session['username'],))
     userId = DB_CURSOR.fetchone()[0]
     session['userId'] = userId
     numBlogs = blog.get_num_blogs(userId)
@@ -208,7 +208,7 @@ def homepagehtml():
         loggedIn = "true"
         DB = sqlite3.connect(DB_NAME)
         DB_CURSOR = DB.cursor()
-        DB_CURSOR.execute(f"SELECT id FROM userdata WHERE username =\"{session['username']}\";")
+        DB_CURSOR.execute(f"SELECT id FROM userdata WHERE username = ?;", (session['username'],))
         userId = DB_CURSOR.fetchone()[0]
         session['userId'] = userId
     else:
@@ -241,24 +241,24 @@ def register():
     userName = request.form['username']
     temp = ""
     for i in userName:
-        if i != '"':
+        if i != '\'':
             temp += i
     userName = temp
     if(len(userName) < 1):
         return render_template("register.html", username_error = "Please enter a valid username")
-
+    if(len(request.form["password"]) < 1):
+        return render_template("register.html", password_error = "Please enter a valid password")
     USER_DB = sqlite3.connect(DB_NAME)
     USER_DB_CURSOR = USER_DB.cursor()
 
-    USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM userdata WHERE username = '{userName}';")
+    print(userName)
+    USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM userdata WHERE username = ?;",(userName,))
     alreadyExists = USER_DB_CURSOR.fetchone()[0]
     if(alreadyExists != 0):
         return render_template("register.html", username_error = "Username already taken")
 
 
-    INSERT_STRING = f"INSERT INTO userdata VALUES(\"{userName}\",\"{request.form['password']}\", NULL);"
-    USER_DB_CURSOR.execute(INSERT_STRING)
-    # print(request.form['username'] + ", " + request.form['password'] + ", " + INSERT_STRING)
+    USER_DB_CURSOR.execute("INSERT INTO userdata VALUES(?,?,NULL);",(userName,request.form["password"],))
     session['username'] = userName
 
     USER_DB.commit()
@@ -274,11 +274,11 @@ def login():
     USER_DB = sqlite3.connect(DB_NAME)
     USER_DB_CURSOR = USER_DB.cursor()
 
-    USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM userdata WHERE username = '{request.form['username']}';")
+    USER_DB_CURSOR.execute(f"SELECT COUNT(*) FROM userdata WHERE username = ?;", (request.form['username'],))
     alreadyExists = USER_DB_CURSOR.fetchone()[0]
     if(alreadyExists == 0):
         return render_template("login.html", username_error = "User does not exist")
-    USER_DB_CURSOR.execute(f"SELECT password FROM userdata WHERE username = '{request.form['username']}';")
+    USER_DB_CURSOR.execute(f"SELECT password FROM userdata WHERE username = ?;", (request.form['username'],))
     userPass = USER_DB_CURSOR.fetchone()[0]
     if(not userPass == request.form["password"]):
         return render_template("login.html", password_error = "Password is incorrect")
@@ -296,6 +296,6 @@ def logout():
     session.pop("username", None)
     return redirect("/login.html")
 
-
-# app.debug = True
-app.run()
+if __name__ == "__main__":
+    # app.debug = True
+    app.run()
